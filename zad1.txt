@@ -1,0 +1,67 @@
+:- dynamic
+    xpozytywne/2,
+    xnegatywne/2.
+
+jezyk(scala) :- jest(trudny),
+    			jest(funkcyjny),
+                jest(obiektowy),
+    			jest(statyczny),
+    			posiada(implicity),
+    			posiada(pattern_matching).
+
+jezyk(python) :- jest(prosty),
+    			 jest(obiektowy),
+    			 posiada(duck_typing).
+
+
+
+jest(obiektowy) :- pozytywne(ma,dziedziczenie),
+    			   pozytywne(ma,interfejsy).
+
+jest(funkcyjny) :- pozytywne(ma,fcf).
+
+jest(trudny) :- pozytywne(ciezko_sie,nauczyc).
+
+jest(statyczny) :- pozytywne(ma,statyczne_typy).
+    
+posiada(lambdy) :- pozytywne(ma,lambdy).
+
+posiada(implicity) :- pozytywne(ma,implicity).
+
+posiada(duck_typing) :- pozytywne(ma_tak_ze,implementujesz_interfejs_majac_metode_o_jego_syntaktyce).
+
+pozytywne(X,Y) :- xpozytywne(X,Y), !.
+
+pozytywne(X,Y) :- \+xnegatywne(X,Y), pytaj(X,Y,tak).
+
+negatywne(X,Y) :- xnegatywne(X,Y), !.
+
+negatywne(X,Y) :- \+xpozytywne(X,Y), pytaj(X,Y,nie).
+
+
+pytaj(X,Y,tak) :- !, format('~w ten jezyk ~w ? (t/n)~n',[X,Y]),
+                    read(Reply),
+                    (Reply = 't'),
+                    pamietaj(X,Y,tak).
+                    
+pytaj(X,Y,nie) :- !, format('~w ten jezyk ~w ? (t/n)~n',[X,Y]),
+                    read(Reply),
+                    (Reply = 'n'),
+                    pamietaj(X,Y,nie).
+                    
+pamietaj(X,Y,tak) :- assertz(xpozytywne(X,Y)).
+
+pamietaj(X,Y,nie) :- assertz(xnegatywne(X,Y)).
+
+wyczysc_fakty :- write('Przycisnij cos aby wyjsc'), nl,
+                    retractall(xpozytywne(_,_)),
+                    retractall(xnegatywne(_,_)),
+                    get_char(_).
+                    
+wykonaj :- jezyk(X), !,
+            format('~nTwoim zwierzeciem moze byc ~w', X),
+            nl, wyczysc_fakty.
+            
+wykonaj :- write('Nie jestem w stanie odgadnac co to za zwierze.'), nl,
+            wyczysc_fakty.
+
