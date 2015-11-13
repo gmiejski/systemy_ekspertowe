@@ -2,42 +2,70 @@
     xpozytywne/2,
     xnegatywne/2.
 
-jezyk(scala) :- jest(trudny),
-    			jest(funkcyjny),
-                jest(obiektowy),
-    			jest(statyczny),
-    			posiada(implicity),
-    			posiada(pattern_matching).
+jezyk(scala) :- jest(skomplikowany),
+                typowany(statycznie),
+                pozytywne(ma, pattern_matching),
+                pozytywne(ma, lambdy),
+                pozytywne(ma, inferencja_typow),
+                negatywne(ma, duck_typing),
+                (
+                    ma_paradygmat(funkcyjny);
+                    ma_paradygmat(obiektowy);
+                    ma_paradygmat(imperatywny)
+                ).
 
-jezyk(python) :- jest(prosty),
-    			 jest(obiektowy),
-    			 posiada(duck_typing).
+jezyk(java) :-  jest(prosty),
+                typowany(statycznie),
+                negatywne(ma, pattern_matching),
+                pozytywne(ma, lambdy),
+                negatywne(ma, inferencja_typow),
+                negatywne(ma, duck_typing),
+                (
+                    ma_paradygmat(obiektowy);
+                    ma_paradygmat(imperatywny)
+                ).
 
+jezyk(haskell)  :-  jest(skomplikowany),
+                    typowany(statycznie),
+                    pozytywne(ma, pattern_matching),
+                    pozytywne(ma, lambdy),
+                    pozytywne(ma, inferencja_typow),
+                    pozytywne(ma, duck_typing),
+                    ma_paradygmat(funkcyjny).
 
+jezyk(python) :-    jest(prosty),
+                    typowany(dynamicznie),
+                    negatywne(ma, pattern_matching),
+                    pozytywne(ma, lambdy),
+                    negatywne(ma, inferencja_typow),
+                    pozytywne(ma, duck_typing),
+                    (
+                        ma_paradygmat(funkcyjny);
+                        ma_paradygmat(obiektowy);
+                        ma_paradygmat(imperatywny)
+                    ).
 
-jest(obiektowy) :- pozytywne(ma,dziedziczenie),
-    			   pozytywne(ma,interfejsy).
+jest(skomplikowany) :-  pozytywne(ma, skomplikowana_skladnia).
+jest(skomplikowany) :-  negatywne(ma, dokumentacja).
+jest(prosty) :- negatywne(ma, skomplikowana_skladnia).
 
-jest(funkcyjny) :- pozytywne(ma,fcf).
+typowany(statycznie) :- pozytywne(ma, typy_rozwiazywane_podczas_kompilacji).
+typowany(dynamicznie) :- negatywne(ma, typy_rozwiazywane_podczas_kompilacji).
 
-jest(trudny) :- pozytywne(ciezko_sie,nauczyc).
+ma_paradygmat(obiektowy) :- pozytywne(ma, dziedziczenie).
+ma_paradygmat(obiektowy) :- pozytywne(ma, enkapsulacje).
 
-jest(statyczny) :- pozytywne(ma,statyczne_typy).
-    
-posiada(lambdy) :- pozytywne(ma,lambdy).
+ma_paradygmat(imperatywny) :-   pozytywne(ma, mutacje).
+ma_paradygmat(imperatywny) :-   pozytywne(ma, efekty_uboczne).
 
-posiada(implicity) :- pozytywne(ma,implicity).
-
-posiada(duck_typing) :- pozytywne(ma_tak_ze,implementujesz_interfejs_majac_metode_o_jego_syntaktyce).
+ma_paradygmat(funkcyjny) :- negatywne(ma, efekty_uboczne).
+ma_paradygmat(funkcyjny) :- negatywne(ma, mutacje).
 
 pozytywne(X,Y) :- xpozytywne(X,Y), !.
-
 pozytywne(X,Y) :- \+xnegatywne(X,Y), pytaj(X,Y,tak).
 
 negatywne(X,Y) :- xnegatywne(X,Y), !.
-
 negatywne(X,Y) :- \+xpozytywne(X,Y), pytaj(X,Y,nie).
-
 
 pytaj(X,Y,tak) :- !, format('~w ten jezyk ~w ? (t/n)~n',[X,Y]),
                     read(Reply),
@@ -55,13 +83,19 @@ pamietaj(X,Y,nie) :- assertz(xnegatywne(X,Y)).
 
 wyczysc_fakty :- write('Przycisnij cos aby wyjsc'), nl,
                     retractall(xpozytywne(_,_)),
-                    retractall(xnegatywne(_,_)),
-                    get_char(_).
+                    retractall(xnegatywne(_,_)).
                     
 wykonaj :- jezyk(X), !,
-            format('~nTwoim zwierzeciem moze byc ~w', X),
+            format('~nTwoim jezykiem moze byc ~w', X),
             nl, wyczysc_fakty.
             
-wykonaj :- write('Nie jestem w stanie odgadnac co to za zwierze.'), nl,
+wykonaj :- write('Nie jestem w stanie odgadnac co to za jezyk.'), nl,
             wyczysc_fakty.
 
+#############################
+
+podobienstwo jezykow?
+algolowe? lispowe?
+biblioteki, dostepne mechanizmy.
+wspolbiezne?
+cechy szczegolne (aktory - erlang)
