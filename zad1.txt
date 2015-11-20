@@ -8,11 +8,25 @@ jezyk(scala) :- jest(skomplikowany),
                 pozytywne(ma, lambdy),
                 pozytywne(ma, inferencja_typow),
                 negatywne(ma, duck_typing),
+                ma_framework_do(big_data),
+                ma_framework_do(tworzenie_serwisow),
                 (
                     ma_paradygmat(funkcyjny);
                     ma_paradygmat(obiektowy);
                     ma_paradygmat(imperatywny)
-                ).
+                ),
+                podobny_do(java).
+
+jezyk(csharp) :- jest(prosty), 
+                 typowany(statycznie),
+                 negatywne(ma, pattern_matching),
+                 pozytywne(ma, lambdy),
+                 pozytywne(ma, inferencja_typow),
+                 negatywne(ma, duck_typing),
+                 ma_framework_do(big_data),
+                 ma_framework_do(tworzenie_serwisow),
+                 ma_paradygmat(obiektowy),
+                 podobny_do(java).
 
 jezyk(java) :-  jest(prosty),
                 typowany(statycznie),
@@ -20,6 +34,8 @@ jezyk(java) :-  jest(prosty),
                 pozytywne(ma, lambdy),
                 negatywne(ma, inferencja_typow),
                 negatywne(ma, duck_typing),
+                ma_framework_do(big_data),
+                ma_framework_do(tworzenie_serwisow),
                 (
                     ma_paradygmat(obiektowy);
                     ma_paradygmat(imperatywny)
@@ -39,18 +55,58 @@ jezyk(python) :-    jest(prosty),
                     pozytywne(ma, lambdy),
                     negatywne(ma, inferencja_typow),
                     pozytywne(ma, duck_typing),
+                    ma_framework_do(big_data),
+                    ma_framework_do(tworzenie_serwisow),
                     (
                         ma_paradygmat(funkcyjny);
                         ma_paradygmat(obiektowy);
                         ma_paradygmat(imperatywny)
                     ).
 
+jezyk(lisp) :-  jest(skomplikowany),
+                typowany(dynamicznie),
+                negatywne(ma, pattern_matching),
+                pozytywne(ma, lambdy),
+                negatywne(ma, inferencja_typow),
+                ma_paradygmat(funkcyjny).
+
+jezyk(erlang) :- jest(skomplikowany),
+                 typowany(dynamicznie),
+                 pozytywne(ma, pattern_matching),
+                 pozytywne(ma, lambdy),
+                 pozytywne(ma, inferencja_typow),
+                 pozytywne(ma, duck_typing),
+                 ma_framework_do(big_data),
+                 ma_framework_do(tworzenie_serwisow),
+                 (
+                        ma_paradygmat(funkcyjny);
+                        ma_paradygmat(obiektowy);
+                        ma_paradygmat(imperatywny)
+                 ).
+
+jest(prosty) :- negatywne(ma, skomplikowana_skladnia), pozytywne(ma, dokumentacja).
 jest(skomplikowany) :-  pozytywne(ma, skomplikowana_skladnia).
 jest(skomplikowany) :-  negatywne(ma, dokumentacja).
-jest(prosty) :- negatywne(ma, skomplikowana_skladnia).
 
 typowany(statycznie) :- pozytywne(ma, typy_rozwiazywane_podczas_kompilacji).
 typowany(dynamicznie) :- negatywne(ma, typy_rozwiazywane_podczas_kompilacji).
+
+ma_framework_do(big_data) :- (  
+                                pozytywne(ma, interfejs_do_hadoopa);
+                                pozytywne(ma, implementacje_sparka)
+                             ).
+
+
+ma_framework_do(tworzenie_serwisow) :- (   
+                                        ma_framework(play);
+                                        ma_framework(spring);
+                                        ma_framework(django);
+                                        ma_framework(dotnet)
+                                       ).
+
+ma_framework(X) :- pozytywne(ma_framework, X).
+                                  
+podobny_do(X) :- pozytywne(podobny_do, X).
 
 ma_paradygmat(obiektowy) :- pozytywne(ma, dziedziczenie).
 ma_paradygmat(obiektowy) :- pozytywne(ma, enkapsulacje).
