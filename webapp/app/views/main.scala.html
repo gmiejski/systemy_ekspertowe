@@ -159,13 +159,58 @@
                             <input type="radio" name="clearDocumentation" value="nie"/> no
                         </label>
                     </fieldset>
+
+                    <fieldset>
+                        <legend>actors</legend>
+                        <label>
+                            <input type="radio" name="actors" value="tak"/> yes
+                        </label>
+                        <label>
+                            <input type="radio" name="actors" value="obojetne" checked="checked"/> n/a
+                        </label>
+                        <label>
+                            <input type="radio" name="actors" value="nie"/> no
+                        </label>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>lazy evaluation</legend>
+                        <label>
+                            <input type="radio" name="lazyEvaluation" value="tak"/> yes
+                        </label>
+                        <label>
+                            <input type="radio" name="lazyEvaluation" value="obojetne" checked="checked"/> n/a
+                        </label>
+                        <label>
+                            <input type="radio" name="lazyEvaluation" value="nie"/> no
+                        </label>
+                    </fieldset>
+
                     <fieldset>
                         <legend>required frameworks</legend>
                         <fieldset>
-                            <legend>big data</legend>
+                            <legend>big data interoperability</legend>
+                            <label>
+                                <input type="checkbox" name="hadoop" value="hadoop"/> hadoop
+                            </label><br>
+                            <label>
+                                <input type="checkbox" name="spark" value="spark"/> spark
+                            </label>
                         </fieldset>
                         <fieldset>
                             <legend>services</legend>
+                            <label>
+                                <input type="checkbox" name="play" value="play"/> play
+                            </label><br>
+                            <label>
+                                <input type="checkbox" name="spring" value="spring"/> spring
+                            </label>
+                            <label>
+                                <input type="checkbox" name="django" value="django"/> django
+                            </label>
+                            <label>
+                                <input type="checkbox" name="dotnet" value="dotnet"/> dotnet
+                            </label>
                         </fieldset>
                     </fieldset>
                 </form>
@@ -180,22 +225,46 @@
 
         <script>
                 var updateState = function(){
-                    function getPrologRule(a){ a=a||'patternMatching';
+                    function getRuleFromRadio(a){
                         return rule($('input[name=' + a + ']:checked', "#form").val(), a);
                     }
+
+                    function getRuleFromCheckbox(s) {
+                        return getRule("ma", s);
+                    }
+
+                    function getRule(pr, prop){
+                        x = $('input[name=' + prop + ']:checked', "#form").val();
+
+                        if(x){
+                            return "pozytywne(" + pr + ", " + prop + ").";
+                        }
+
+                        return "obojetne("+ pr + ", " + prop + ").";
+                    }
+
                     var state = [
                         typed($("input[name=type-system]:checked", "#form").val()),
-                        getPrologRule("typeInheritance"),
-                        getPrologRule("encapsulation"),
-                        getPrologRule("mutation"),
-                        getPrologRule("sideEffects"),
-                        getPrologRule("patternMatching"),
-                        getPrologRule("lambdas"),
-                        getPrologRule("typeInference"),
-                        getPrologRule("duckTyping"),
-                        getPrologRule("simpleSyntax"),
-                        getPrologRule("clearDocumentation")
+                        getRuleFromRadio("typeInheritance"),
+                        getRuleFromRadio("encapsulation"),
+                        getRuleFromRadio("mutation"),
+                        getRuleFromRadio("sideEffects"),
+                        getRuleFromRadio("patternMatching"),
+                        getRuleFromRadio("lambdas"),
+                        getRuleFromRadio("typeInference"),
+                        getRuleFromRadio("duckTyping"),
+                        getRuleFromRadio("simpleSyntax"),
+                        getRuleFromRadio("clearDocumentation"),
+                        getRuleFromRadio("actors"),
+                        getRuleFromRadio("lazyEvaluation"),
+                        getRuleFromCheckbox("hadoop"),
+                        getRuleFromCheckbox("spark"),
+                        getRule("ma_framework", "play"),
+                        getRule("ma_framework", "spring"),
+                        getRule("ma_framework", "django"),
+                        getRule("ma_framework", "dotnet"),
                     ];
+
                     $.ajax({
                         url: '/',
                         type: 'POST',

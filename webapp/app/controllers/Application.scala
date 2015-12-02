@@ -54,13 +54,25 @@ class Application extends Controller {
 
 object Application {
   private[this] val mainTheorySource =
-    """jezyk(scala) :- jest(skomplikowany),
+    """
+      |jezyk(c) :-      jest(prosty),
+      |                 typowany(statycznie),
+      |                 negatywne(ma, patternMatching),
+      |                 negatywne(ma, lambdas),
+      |                 negatywne(ma, typeInference),
+      |                 negatywne(ma, duckTyping),
+      |                 negatywne(ma, lazyEvaluation),
+      |                 ma_paradygmat(imperatywny).
+      |
+      |jezyk(scala) :- jest(skomplikowany),
       |                typowany(statycznie),
       |                pozytywne(ma, patternMatching),
       |                pozytywne(ma, lambdas),
       |                pozytywne(ma, typeInference),
       |                negatywne(ma, duckTyping),
       |                ma_paradygmat(obiektowy),
+      |                ma_paradygmat(leniwy),
+      |                ma_paradygmat(wspolbiezny),
       |                (
       |                   ma_paradygmat(imperatywny);
       |                   ma_paradygmat(funkcyjny)
@@ -72,6 +84,8 @@ object Application {
       |                 pozytywne(ma, lambdas),
       |                 pozytywne(ma, typeInference),
       |                 negatywne(ma, duckTyping),
+      |                 negatywne(ma, actors),
+      |                 negatywne(ma, lazyEvaluation),
       |                 ma_paradygmat(obiektowy),
       |                 ma_paradygmat(imperatywny).
       |
@@ -81,6 +95,8 @@ object Application {
       |                pozytywne(ma, lambdas),
       |                negatywne(ma, typeInference),
       |                negatywne(ma, duckTyping),
+      |                negatywne(ma, actors),
+      |                negatywne(ma, lazyEvaluation),
       |                ma_paradygmat(obiektowy),
       |                ma_paradygmat(imperatywny).
       |
@@ -90,14 +106,18 @@ object Application {
       |                    pozytywne(ma, lambdas),
       |                    pozytywne(ma, typeInference),
       |                    pozytywne(ma, duckTyping),
-      |                    ma_paradygmat(funkcyjny).
+      |                    negatywne(ma, actors),
+      |                    ma_paradygmat(funkcyjny),
+      |                    ma_paradygmat(leniwy).
       |
       |jezyk(python) :-    jest(prosty),
       |                    typowany(dynamicznie),
       |                    negatywne(ma, patternMatching),
-      |                    pozytywne(ma, lambdas),
       |                    negatywne(ma, typeInference),
+      |                    pozytywne(ma, lambdas),
       |                    pozytywne(ma, duckTyping),
+      |                    negatywne(ma, actors),
+      |                    negatywne(ma, lazyEvaluation),
       |                    ma_paradygmat(obiektowy),
       |                    (
       |                       ma_paradygmat(imperatywny);
@@ -106,10 +126,12 @@ object Application {
       |
       |jezyk(lisp) :-  jest(skomplikowany),
       |                typowany(dynamicznie),
-      |                negatywne(ma, patternMatching),
       |                pozytywne(ma, lambdas),
       |                pozytywne(ma, patternMatching),
       |                negatywne(ma, typeInheritance),
+      |                negatywne(ma, lazyEvaluation),
+      |                negatywne(ma, actors),
+      |                ma_paradygmat(obiektowy),
       |                ma_paradygmat(funkcyjny).
       |
       |jezyk(erlang) :- jest(skomplikowany),
@@ -118,9 +140,12 @@ object Application {
       |                 pozytywne(ma, lambdas),
       |                 pozytywne(ma, typeInference),
       |                 pozytywne(ma, duckTyping),
+      |                 negatywne(ma, lazyEvaluation),
       |                 ma_paradygmat(funkcyjny),
-      |                 ma_paradygmat(obiektowy).
+      |                 ma_paradygmat(obiektowy),
+      |                 ma_paradygmat(wspolbiezny).
       |
+
       |
       |jest(prosty) :- pozytywne(ma, simpleSyntax), pozytywne(ma, clearDocumentation).
       |jest(skomplikowany) :-  negatywne(ma, simpleSyntax).
@@ -130,8 +155,8 @@ object Application {
       |typowany(dynamicznie) :- negatywne(ma, typy_rozwiazywane_podczas_kompilacji).
       |
       |ma_framework_do(big_data) :- (
-      |                                pozytywne(ma, interfejs_do_hadoopa);
-      |                                pozytywne(ma, implementacje_sparka)
+      |                                pozytywne(ma, hadoop);
+      |                                pozytywne(ma, spark)
       |                             ).
       |
       |
@@ -155,7 +180,9 @@ object Application {
       |ma_paradygmat(funkcyjny) :- negatywne(ma, sideEffects),
       |                            negatywne(ma, mutation).
       |
+      |ma_paradygmat(wspolbiezny) :- pozytywne(ma, actors).
       |
+      |ma_paradygmat(leniwy) :- pozytywne(ma, lazyEvaluation).
       |
       |pozytywne(X,Y) :- (
       |                     tak(X, Y);
