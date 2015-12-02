@@ -10,7 +10,10 @@ libraryDependencies ++= Seq(
   jdbc,
   cache,
   ws,
-  specs2 % Test
+  specs2 % Test,
+  "it.unibo.alice.tuprolog" % "tuprolog" % "2.1.1",
+  "com.google.code.gson" % "gson" % "2.3.1"
+
 )
 
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"

@@ -5,11 +5,245 @@
 <html lang="en">
     <head>
         <title>@title</title>
+        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/slider.css")">
         <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
-        <script src="@routes.Assets.versioned("javascripts/hello.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.versioned("javascripts/jquery-2.1.4.min.js")" type="text/javascript"></script>
     </head>
     <body>
-        @content
+        <h2>What programming language should You use?</h2>
+        <div id="wrapper">
+            <div id="selection-pane">
+                <form id="form">
+                    <fieldset>
+                        <legend>type system</legend>
+                        <label>
+                            <input type="radio" name="type-system" value="statically-typed"/> Statically typed
+                        </label>
+                        <br>
+                        <label>
+                            <input type="radio" name="type-system" value="dynamically-typed"/> Dynamically typed
+                        </label>
+                        <br>
+                        <label>
+                            <input type="radio" name="type-system" value="not-specified" checked="checked"/> n/a
+                        </label>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>type inheritance</legend>
+                        <label>
+                            <input type="radio" name="typeInheritance" value="tak"/> yes
+                        </label>
+                        <label>
+                            <input type="radio" name="typeInheritance" value="obojetne" checked="checked"/> n/a
+                        </label>
+                        <label>
+                            <input type="radio" name="typeInheritance" value="nie"/> no
+                        </label>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>encapsulation</legend>
+                        <label>
+                            <input type="radio" name="encapsulation" value="tak"/> yes
+                        </label>
+                        <label>
+                            <input type="radio" name="encapsulation" value="obojetne" checked="checked"/> n/a
+                        </label>
+                        <label>
+                            <input type="radio" name="encapsulation" value="nie"/> no
+                        </label>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>mutation</legend>
+                        <label>
+                            <input type="radio" name="mutation" value="tak"/> yes
+                        </label>
+                        <label>
+                            <input type="radio" name="mutation" value="obojetne" checked="checked"/> n/a
+                        </label>
+                        <label>
+                            <input type="radio" name="mutation" value="nie"/> no
+                        </label>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>side effects</legend>
+                        <label>
+                            <input type="radio" name="sideEffects" value="tak"/> yes
+                        </label>
+                        <label>
+                            <input type="radio" name="sideEffects" value="obojetne" checked="checked"/> n/a
+                        </label>
+                        <label>
+                            <input type="radio" name="sideEffects" value="nie"/> no
+                        </label>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>pattern matching</legend>
+                        <label>
+                            <input type="radio" name="patternMatching" value="tak"/> yes
+                        </label>
+                        <label>
+                            <input type="radio" name="patternMatching" value="obojetne" checked="checked"/> n/a
+                        </label>
+                        <label>
+                            <input type="radio" name="patternMatching" value="nie"/> no
+                        </label>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>lambdas</legend>
+                        <label>
+                            <input type="radio" name="lambdas" value="tak"/> yes
+                        </label>
+                        <label>
+                            <input type="radio" name="lambdas" value="obojetne" checked="checked"/> n/a
+                        </label>
+                        <label>
+                            <input type="radio" name="lambdas" value="nie"/> no
+                        </label>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>type inference</legend>
+                        <label>
+                            <input type="radio" name="typeInference" value="tak"/> yes
+                        </label>
+                        <label>
+                            <input type="radio" name="typeInference" value="obojetne" checked="checked"/> n/a
+                        </label>
+                        <label>
+                            <input type="radio" name="typeInference" value="nie"/> no
+                        </label>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>duck typing</legend>
+                        <label>
+                            <input type="radio" name="duckTyping" value="tak"/> yes
+                        </label>
+                        <label>
+                            <input type="radio" name="duckTyping" value="obojetne" checked="checked"/> n/a
+                        </label>
+                        <label>
+                            <input type="radio" name="duckTyping" value="nie"/> no
+                        </label>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>simple syntax</legend>
+                        <label>
+                            <input type="radio" name="simpleSyntax" value="tak"/> yes
+                        </label>
+                        <label>
+                            <input type="radio" name="simpleSyntax" value="obojetne" checked="checked"/> n/a
+                        </label>
+                        <label>
+                            <input type="radio" name="simpleSyntax" value="nie"/> no
+                        </label>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>clear documentation</legend>
+                        <label>
+                            <input type="radio" name="clearDocumentation" value="tak"/> yes
+                        </label>
+                        <label>
+                            <input type="radio" name="clearDocumentation" value="obojetne" checked="checked"/> n/a
+                        </label>
+                        <label>
+                            <input type="radio" name="clearDocumentation" value="nie"/> no
+                        </label>
+                    </fieldset>
+                    <fieldset>
+                        <legend>required frameworks</legend>
+                        <fieldset>
+                            <legend>big data</legend>
+                        </fieldset>
+                        <fieldset>
+                            <legend>services</legend>
+                        </fieldset>
+                    </fieldset>
+                </form>
+            </div>
+
+            <div id="suggestion-pane">
+                <h3>Suggestions:</h3>
+                <ul id="suggestion-list">
+                </ul>
+            </div>
+        </div>
+
+        <script>
+                var updateState = function(){
+                    function getPrologRule(a){ a=a||'patternMatching';
+                        return rule($('input[name=' + a + ']:checked', "#form").val(), a);
+                    }
+                    var state = [
+                        typed($("input[name=type-system]:checked", "#form").val()),
+                        getPrologRule("typeInheritance"),
+                        getPrologRule("encapsulation"),
+                        getPrologRule("mutation"),
+                        getPrologRule("sideEffects"),
+                        getPrologRule("patternMatching"),
+                        getPrologRule("lambdas"),
+                        getPrologRule("typeInference"),
+                        getPrologRule("duckTyping"),
+                        getPrologRule("simpleSyntax"),
+                        getPrologRule("clearDocumentation")
+                    ];
+                    $.ajax({
+                        url: '/',
+                        type: 'POST',
+                        data: JSON.stringify(state),
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        async: false,
+                        success : updateSuggestions,
+                        error : function(XMLHttpRequest, textStatus, errorThrown) {
+                            alert('There was an error.' + textStatus + ' ' + errorThrown);
+                        }
+                    });
+                };
+
+                var updateSuggestions = function(suggestions){
+                    var list = $('#suggestion-list');
+                    list.empty();
+
+                    $.each(suggestions, function(i)
+                    {
+                        var li = $('<li/>')
+                                .addClass('ui-menu-item')
+                                .attr('role', 'menuitem')
+                                .appendTo(list);
+                        $('<a/>')
+                                .addClass('ui-all')
+                                .text(suggestions[i])
+                                .appendTo(li);
+                    });
+                };
+
+                var rule = function(prefix, str){
+                    return prefix + "(ma," + str + ").";
+                };
+
+                var typed = function(str){
+                    if(str === "statically-typed"){
+                        return "tak(ma, typy_rozwiazywane_podczas_kompilacji).";
+                    }else if (str === "dynamically-typed"){
+                        return "nie(ma, typy_rozwiazywane_podczas_kompilacji).";
+                    }else{
+                        return "obojetne(ma, typy_rozwiazywane_podczas_kompilacji).";
+                    }
+                };
+
+
+                $("#form").find("input").on("change", updateState);
+                updateState();
+        </script>
     </body>
 </html>
