@@ -16,7 +16,7 @@ class Application extends Controller {
 
   def toPrologTheory(json: JsValue): Theory = {
     val strings: Array[String] = gson.fromJson(json.toString(), classOf[Array[String]])
-    val theory = strings.mkString("\n")
+    val theory = strings.map(s => if (s.endsWith(".")) s else s + ".").mkString("\n")
     Logger.info("theory: " + theory)
     Logger.info(s"json=$json")
     new Theory(theory)
@@ -25,12 +25,12 @@ class Application extends Controller {
   def choose = Action { request =>
     def buildResult(info: SolveInfo, acc: List[String]): Array[String] =
       if (!info.hasOpenAlternatives) {
-        acc.toSet.toArray
+        acc.toSet.toList.sorted.toArray
       } else {
         if (info.isSuccess) {
           buildResult(prolog.solveNext(), info.getTerm("X").toString +: acc)
         } else {
-          acc.toArray
+          acc.sorted.toArray
         }
       }
 
@@ -55,143 +55,182 @@ class Application extends Controller {
 object Application {
   private[this] val mainTheorySource =
     """
-      |jezyk(c) :-      jest(prosty),
-      |                 typowany(statycznie),
-      |                 negatywne(ma, patternMatching),
-      |                 negatywne(ma, lambdas),
-      |                 negatywne(ma, typeInference),
-      |                 negatywne(ma, duckTyping),
-      |                 negatywne(ma, lazyEvaluation),
-      |                 ma_paradygmat(imperatywny).
+      |jezyk(ruby) :- is(simple),
+      |               typed(dynamically),
+      |               true(has, duckTyping),
+      |               true(has, lambdas),
+      |               true(has, typeInference),
+      |               false(has, patternMatching),
+      |               false(has, lazyEvaluation),
+      |               false(has, actors),
+      |               paradigm(object-oriented),
+      |               paradigm(metaprogramming),
+      |               (
+      |                 paradigm(imperative);
+      |                 paradigm(functional)
+      |               ),
+      |               interpreted.
       |
-      |jezyk(scala) :- jest(skomplikowany),
-      |                typowany(statycznie),
-      |                pozytywne(ma, patternMatching),
-      |                pozytywne(ma, lambdas),
-      |                pozytywne(ma, typeInference),
-      |                negatywne(ma, duckTyping),
-      |                ma_paradygmat(obiektowy),
-      |                ma_paradygmat(leniwy),
-      |                ma_paradygmat(wspolbiezny),
+      |jezyk(c) :-      is(simple),
+      |                 typed(statically),
+      |                 false(has, patternMatching),
+      |                 false(has, lambdas),
+      |                 false(has, typeInference),
+      |                 false(has, duckTyping),
+      |                 false(has, lazyEvaluation),
+      |                 paradigm(imperative),
+      |                 paradigm(metaprogramming),
+      |                 usable_from_ide(visualStudio),
+      |                 run_directly.
+      |
+      |jezyk(scala) :- is(complicated),
+      |                typed(statically),
+      |                true(has, patternMatching),
+      |                true(has, lambdas),
+      |                true(has, typeInference),
+      |                false(has, duckTyping),
+      |                paradigm(object-oriented),
+      |                paradigm(lazy),
+      |                paradigm(concurrent),
+      |                paradigm(metaprogramming),
       |                (
-      |                   ma_paradygmat(imperatywny);
-      |                   ma_paradygmat(funkcyjny)
-      |                ).
+      |                   paradigm(imperative);
+      |                   paradigm(functional)
+      |                ),
+      |                (
+      |                   usable_from_ide(intellij);
+      |                   usable_from_ide(eclipse)
+      |                ),
+      |                write_once_ruin_everywhere.
       |
-      |jezyk(csharp) :- jest(prosty),
-      |                 typowany(statycznie),
-      |                 negatywne(ma, patternMatching),
-      |                 pozytywne(ma, lambdas),
-      |                 pozytywne(ma, typeInference),
-      |                 negatywne(ma, duckTyping),
-      |                 negatywne(ma, actors),
-      |                 negatywne(ma, lazyEvaluation),
-      |                 ma_paradygmat(obiektowy),
-      |                 ma_paradygmat(imperatywny).
+      |jezyk(csharp) :- is(simple),
+      |                 typed(statically),
+      |                 false(has, patternMatching),
+      |                 true(has, lambdas),
+      |                 true(has, typeInference),
+      |                 false(has, duckTyping),
+      |                 false(has, actors),
+      |                 false(has, lazyEvaluation),
+      |                 false(has, macros),
+      |                 paradigm(object-oriented),
+      |                 paradigm(imperative),
+      |                 usable_from_ide(visualStudio),
+      |                 write_once_ruin_everywhere.
       |
-      |jezyk(java) :-  jest(prosty),
-      |                typowany(statycznie),
-      |                negatywne(ma, patternMatching),
-      |                pozytywne(ma, lambdas),
-      |                negatywne(ma, typeInference),
-      |                negatywne(ma, duckTyping),
-      |                negatywne(ma, actors),
-      |                negatywne(ma, lazyEvaluation),
-      |                ma_paradygmat(obiektowy),
-      |                ma_paradygmat(imperatywny).
+      |jezyk(java) :-  is(simple),
+      |                typed(statically),
+      |                false(has, patternMatching),
+      |                true(has, lambdas),
+      |                false(has, typeInference),
+      |                false(has, duckTyping),
+      |                false(has, actors),
+      |                false(has, lazyEvaluation),
+      |                false(has, macros),
+      |                paradigm(object-oriented),
+      |                paradigm(imperative),
+      |                (
+      |                   usable_from_ide(intellij);
+      |                   usable_from_ide(eclipse)
+      |                ),
+      |                write_once_ruin_everywhere.
       |
-      |jezyk(haskell)  :-  jest(skomplikowany),
-      |                    typowany(statycznie),
-      |                    pozytywne(ma, patternMatching),
-      |                    pozytywne(ma, lambdas),
-      |                    pozytywne(ma, typeInference),
-      |                    pozytywne(ma, duckTyping),
-      |                    negatywne(ma, actors),
-      |                    ma_paradygmat(funkcyjny),
-      |                    ma_paradygmat(leniwy).
+      |jezyk(haskell)  :-  is(complicated),
+      |                    typed(statically),
+      |                    true(has, patternMatching),
+      |                    true(has, lambdas),
+      |                    true(has, typeInference),
+      |                    true(has, duckTyping),
+      |                    false(has, actors),
+      |                    false(has, macros),
+      |                    paradigm(functional),
+      |                    paradigm(lazy),
+      |                    usable_from_ide(intellij),
+      |                    run_directly.
       |
-      |jezyk(python) :-    jest(prosty),
-      |                    typowany(dynamicznie),
-      |                    negatywne(ma, patternMatching),
-      |                    negatywne(ma, typeInference),
-      |                    pozytywne(ma, lambdas),
-      |                    pozytywne(ma, duckTyping),
-      |                    negatywne(ma, actors),
-      |                    negatywne(ma, lazyEvaluation),
-      |                    ma_paradygmat(obiektowy),
+      |jezyk(python) :-    is(simple),
+      |                    typed(dynamically),
+      |                    false(has, patternMatching),
+      |                    false(has, typeInference),
+      |                    true(has, lambdas),
+      |                    true(has, duckTyping),
+      |                    false(has, actors),
+      |                    false(has, lazyEvaluation),
+      |                    false(has, macros),
+      |                    paradigm(object-oriented),
       |                    (
-      |                       ma_paradygmat(imperatywny);
-      |                       ma_paradygmat(funkcyjny)
-      |                    ).
+      |                       paradigm(imperative);
+      |                       paradigm(functional)
+      |                    ),
+      |                    usable_from_ide(intellij),
+      |                    interpreted.
       |
-      |jezyk(lisp) :-  jest(skomplikowany),
-      |                typowany(dynamicznie),
-      |                pozytywne(ma, lambdas),
-      |                pozytywne(ma, patternMatching),
-      |                negatywne(ma, typeInheritance),
-      |                negatywne(ma, lazyEvaluation),
-      |                negatywne(ma, actors),
-      |                ma_paradygmat(obiektowy),
-      |                ma_paradygmat(funkcyjny).
+      |jezyk(lisp) :-  is(complicated),
+      |                typed(dynamically),
+      |                true(has, lambdas),
+      |                true(has, patternMatching),
+      |                false(has, typeInheritance),
+      |                false(has, lazyEvaluation),
+      |                false(has, actors),
+      |                paradigm(object-oriented),
+      |                paradigm(metaprogramming),
+      |                paradigm(functional),
+      |                write_once_ruin_everywhere.
       |
-      |jezyk(erlang) :- jest(skomplikowany),
-      |                 typowany(dynamicznie),
-      |                 pozytywne(ma, patternMatching),
-      |                 pozytywne(ma, lambdas),
-      |                 pozytywne(ma, typeInference),
-      |                 pozytywne(ma, duckTyping),
-      |                 negatywne(ma, lazyEvaluation),
-      |                 ma_paradygmat(funkcyjny),
-      |                 ma_paradygmat(obiektowy),
-      |                 ma_paradygmat(wspolbiezny).
-      |
-
-      |
-      |jest(prosty) :- pozytywne(ma, simpleSyntax), pozytywne(ma, clearDocumentation).
-      |jest(skomplikowany) :-  negatywne(ma, simpleSyntax).
-      |jest(skomplikowany) :-  negatywne(ma, clearDocumentation).
-      |
-      |typowany(statycznie) :- pozytywne(ma, typy_rozwiazywane_podczas_kompilacji).
-      |typowany(dynamicznie) :- negatywne(ma, typy_rozwiazywane_podczas_kompilacji).
-      |
-      |ma_framework_do(big_data) :- (
-      |                                pozytywne(ma, hadoop);
-      |                                pozytywne(ma, spark)
-      |                             ).
+      |jezyk(erlang) :- is(complicated),
+      |                 typed(dynamically),
+      |                 true(has, patternMatching),
+      |                 true(has, lambdas),
+      |                 true(has, typeInference),
+      |                 true(has, duckTyping),
+      |                 false(has, lazyEvaluation),
+      |                 false(has, macros),
+      |                 paradigm(functional),
+      |                 paradigm(object-oriented),
+      |                 paradigm(concurrent),
+      |                 usable_from_ide(intellij),
+      |                 write_once_ruin_everywhere.
       |
       |
-      |ma_framework_do(tworzenie_serwisow) :- (
-      |                                        ma_framework(play);
-      |                                        ma_framework(spring);
-      |                                        ma_framework(django);
-      |                                        ma_framework(dotnet)
-      |                                       ).
       |
-      |ma_framework(X) :- pozytywne(ma_framework, X).
+      |is(simple) :- true(has, simpleSyntax), true(has, clearDocumentation).
+      |is(complicated) :-  false(has, simpleSyntax).
+      |is(complicated) :-  false(has, clearDocumentation).
       |
-      |podobny_do(X) :- pozytywne(podobny_do, X).
+      |typed(statically) :-  true(has, types_resolved_during_compilation).
+      |typed(dynamically) :- false(has, types_resolved_during_compilation).
       |
-      |ma_paradygmat(obiektowy) :- pozytywne(ma, typeInheritance),
-      |                            pozytywne(ma, encapsulation).
+      |usable_from_ide(X) :- true(mozna_uzywac_z, X).
       |
-      |ma_paradygmat(imperatywny) :-   pozytywne(ma, mutation),
-      |                                pozytywne(ma, sideEffects).
+      |write_once_ruin_everywhere :- true(has, virtualMachine).
       |
-      |ma_paradygmat(funkcyjny) :- negatywne(ma, sideEffects),
-      |                            negatywne(ma, mutation).
+      |interpreted :- true(has, interpreter).
       |
-      |ma_paradygmat(wspolbiezny) :- pozytywne(ma, actors).
+      |run_directly :- false(has, virtualMachine),
+      |                false(has, interpreter).
       |
-      |ma_paradygmat(leniwy) :- pozytywne(ma, lazyEvaluation).
+      |paradigm(object-oriented) :- true(has, typeInheritance),
+      |                             true(has, encapsulation).
       |
-      |pozytywne(X,Y) :- (
-      |                     tak(X, Y);
-      |                     obojetne(X, Y)
+      |paradigm(imperative) :- true(has, mutation),
+      |                        true(has, sideEffects).
+      |
+      |paradigm(functional) :- false(has, sideEffects),
+      |                        false(has, mutation).
+      |
+      |paradigm(concurrent) :- true(has, actors).
+      |
+      |paradigm(metaprogramming) :- true(has, macros).
+      |
+      |paradigm(lazy) :- true(has, lazyEvaluation).
+      |
+      |true(X,Y) :- (
+      |                     yes(X, Y);
+      |                     neutral(X, Y)
       |                  ), !.
       |
-      |negatywne(X,Y) :- (
-      |                     nie(X,Y);
-      |                     obojetne(X, Y)
+      |false(X,Y) :- (
+      |                     no(X,Y);
+      |                     neutral(X, Y)
       |                  ).
       |
       |
