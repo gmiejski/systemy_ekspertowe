@@ -248,7 +248,7 @@
                     }
 
                     function getRule(prefix,alternative, first, second){
-                        x = $('input[name=' + second + ']:checked', "#form").val();
+                        var x = $('input[name=' + second + ']:checked', "#form").val();
 
                         if(x){
                             return prefix + "(" + first + ", " + second + ").";
@@ -258,13 +258,14 @@
                     }
 
                     function code(str) {
-                        x = $("input[name=code]:checked", "#form").val();
+                        var x = $("input[name=code]:checked", "#form").val();
                         if(x === str)
                             return "yes(has, "+ str +").";
                         if(x === "not-specified")
                             return "neutral(has, "+ str +").";
                         else return "no(has, " + str + ").";
                     }
+
                     var state = [
                         typed($("input[name=type-system]:checked", "#form").val()),
                         getRuleFromRadio("typeInheritance"),
@@ -286,7 +287,7 @@
                         getRule("yes", "no", "mozna_uzywac_z", "visualStudio"),
                         code("machineCode"),
                         code("virtualMachine"),
-                        code("interpreter"),
+                        code("interpreter")
                     ];
 
                     $.ajax({
