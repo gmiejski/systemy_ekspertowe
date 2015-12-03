@@ -7,3 +7,6 @@ To launch web application (on linux):
 - run /opt/scala-activator/activator run
 - open Your favorite webbrowser
 - launch localhost:9000
+
+Prolog theory is located in:
+/webapp/public/theory.txt
