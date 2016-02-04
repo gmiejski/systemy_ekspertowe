@@ -1,0 +1,188 @@
+@(title: String)(content: Html)
+
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <title>What programming language should You use?</title>
+        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/slider.css")">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
+        <script src="@routes.Assets.versioned("javascripts/jquery-2.1.4.min.js")" type="text/javascript"></script>
+    </head>
+    <body>
+        <h2>Jakie leczenie proponujesz?</h2>
+        <div id="wrapper">
+            <div id="selection-pane">
+                <form id="form">
+                    <fieldset>
+                        <legend>Hemihepatektomia</legend>
+                            <label>
+                                <input type="radio" name="0" value="yes"/> yes
+                            </label>
+                            <label>
+                                <input type="radio" name="0" value="no" checked="checked"/> no
+                            </label>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Mala resekcja watroby</legend>
+                        <label>
+                            <input type="radio" name="1" value="yes"/> yes
+                        </label>
+                        <label>
+                            <input type="radio" name="1" value="no" checked="checked"/> no
+                        </label>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Appendektomia</legend>
+                        <label>
+                            <input type="radio" name="3" value="yes"/> yes
+                        </label>
+                        <label>
+                            <input type="radio" name="3" value="no" checked="checked"/> no
+                        </label>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Hemodializa</legend>
+                        <label>
+                            <input type="radio" name="7" value="yes"/> yes
+                        </label>
+                        <label>
+                            <input type="radio" name="7" value="no" checked="checked"/> no
+                        </label>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Operacja Whipplea</legend>
+                        <label>
+                            <input type="radio" name="17" value="yes"/> yes
+                        </label>
+                        <label>
+                            <input type="radio" name="17" value="no" checked="checked"/> no
+                        </label>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Operacja Puestowa</legend>
+                        <label>
+                            <input type="radio" name="27" value="yes"/> yes
+                        </label>
+                        <label>
+                            <input type="radio" name="27" value="no" checked="checked"/> no
+                        </label>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Cholecystektomia</legend>
+                            <label>
+                                <input type="radio" name="34" value="yes"/> yes
+                            </label>
+                            <label>
+                                <input type="radio" name="34" value="no" checked="checked"/> no
+                            </label>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Splenektomia</legend>
+                        <label>
+                            <input type="radio" name="38" value="yes"/> yes
+                        </label>
+                        <label>
+                            <input type="radio" name="38" value="no" checked="checked"/> no
+                        </label>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Miomektomia</legend>
+                        <label>
+                            <input type="radio" name="43" value="yes"/> yes
+                        </label>
+                        <label>
+                            <input type="radio" name="43" value="no" checked="checked"/> no
+                        </label>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Wszczepienie sztucznej zastawki</legend>
+                        <label>
+                            <input type="radio" name="52" value="yes"/> yes
+                        </label>
+                        <label>
+                            <input type="radio" name="52" value="no" checked="checked"/> no
+                        </label>
+                    </fieldset>
+
+                </form>
+            </div>
+
+            <div id="suggestion-pane">
+                <h3>Prawdopodobienstwo wyleczenia:</h3>
+                <ul id="suggestion-list">
+                </ul>
+            </div>
+        </div>
+
+        <script>
+                var updateState = function(){
+                    var state = [];
+
+                    var addIfPresent = function(i){
+                        if($('input[name=' + i + ']:checked', "#form").val() === "yes"){
+                            state.push(i)
+                        }
+                    };
+
+                    addIfPresent("0");
+                    addIfPresent("1");
+                    addIfPresent("3");
+                    addIfPresent("7");
+                    addIfPresent("17");
+                    addIfPresent("27");
+                    addIfPresent("34");
+                    addIfPresent("38");
+                    addIfPresent("43");
+                    addIfPresent("52");
+                    addIfPresent("56");
+
+                    $.ajax({
+                        url: '/',
+                        type: 'POST',
+                        data: JSON.stringify(state),
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        async: false,
+                        success : updateSuggestions,
+                        error : function(XMLHttpRequest, textStatus, errorThrown) {
+                            alert('There was an error.' + textStatus + ' ' + errorThrown);
+                        }
+                    });
+                };
+
+                var updateSuggestions = function(result){
+                    var names = result[0];
+                    var probabilities= result[1];
+
+                    var list = $('#suggestion-list');
+                    list.empty();
+
+                    $.each(names, function(i)
+                    {
+                        var li = $('<li/>')
+                                .addClass('ui-menu-item')
+                                .attr('role', 'menuitem')
+                                .appendTo(list);
+                        $('<a/>')
+                                .addClass('ui-all')
+                                .text(names[i] + ": " + probabilities[i])
+                                .appendTo(li);
+                    });
+                };
+
+                $("#form").find("input").on("change", updateState);
+                updateState();
+        </script>
+    </body>
+</html>

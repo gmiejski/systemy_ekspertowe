@@ -1,0 +1,10 @@
+#selection-pane {
+    display: inline-block;
+}
+
+#suggestion-pane {
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 10em;
+    position: fixed;
+}
