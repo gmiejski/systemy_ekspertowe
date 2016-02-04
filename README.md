@@ -10,3 +10,5 @@ To launch web application (on linux):
 
 Prolog theory is located in:
 /webapp/public/theory.txt
+
+To launch web application using bayesian network genie libraries must be provided using java property java.library.path (pointing to dir containing required .dll/.so file)
